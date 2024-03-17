@@ -16,7 +16,7 @@ resource "aws_vpc" "main" {
   cidr_block = "10.0.0.0/16"
 
   tags = {
-    Name = "CloudAcademy"
+    Name = "Nextjs"
     Demo = "Terraform"
   }
 }
@@ -108,7 +108,7 @@ resource "aws_security_group" "webserver" {
   }
 }
 
-resource "aws_instance" "web" {
+resource "aws_instance" "nextjs" {
   ami                    = var.amis[var.region]
   instance_type          = var.instance_type
   key_name               = var.key_name
@@ -121,21 +121,33 @@ resource "aws_instance" "web" {
   user_data = <<EOF
 #!/bin/bash
 apt-get -y update
-apt-get -y install nginx
+curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+sudo apt-get install -y nodejs
+node -v
+
+sudo npm install -g npm@latest
+npm -v
 
 cd /var/www/html
 rm *.html
-git clone https://github.com/cloudacademy/webgl-globe/ .
+git clone https://github.com/warengonzaga/sample-nextjs-app.git .
 cp -a src/* .
 rm -rf {.git,*.md,src,conf.d,docs,Dockerfile,index.nginx-debian.html}
 
-systemctl restart nginx
-systemctl status nginx
+cd sample-nextjs-app
+npm install
+npm run build
+
+sudo npm install pm2 -g
+
+pm2 start npm --name nextjs-app -- run start -- -p 3000
+pm2 start nextjs-app
+
 
 echo fin v1.00!
 EOF
 
   tags = {
-    Name = "CloudAcademy"
+    Name = "Nextjs"
   }
 }
