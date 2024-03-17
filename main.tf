@@ -48,7 +48,7 @@ resource "aws_internet_gateway" "main" {
 
   tags = {
     "Name"  = "Main"
-    "Owner" = "CloudAcademy"
+    "Owner" = "nextjs"
   }
 }
 
@@ -111,7 +111,7 @@ resource "aws_security_group" "webserver" {
 resource "aws_instance" "nextjs" {
   ami                    = var.amis[var.region]
   instance_type          = var.instance_type
-  key_name               = var.key_name
+  #key_name               = var.key_name
   subnet_id              = aws_subnet.subnet1.id
   vpc_security_group_ids = [aws_security_group.webserver.id]
 
