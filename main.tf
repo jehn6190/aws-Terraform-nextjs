@@ -9,14 +9,14 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-west-2"
+  region = "eu-west-2"
 }
 
 resource "aws_vpc" "main" {
   cidr_block = "10.0.0.0/16"
 
   tags = {
-    Name = "Nextjs"
+    Name = "Pecrio"
     Demo = "Terraform"
   }
 }
@@ -48,7 +48,7 @@ resource "aws_internet_gateway" "main" {
 
   tags = {
     "Name"  = "Main"
-    "Owner" = "nextjs"
+    "Owner" = "Pecrio"
   }
 }
 
@@ -81,18 +81,10 @@ resource "aws_security_group" "webserver" {
   vpc_id      = aws_vpc.main.id
 
   ingress {
-    description = "SSH from anywhere"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = [var.workstation_ip]
-  }
-
-  ingress {
-    description = "80 from anywhere"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
+    description = "from anywhere"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -108,10 +100,10 @@ resource "aws_security_group" "webserver" {
   }
 }
 
-resource "aws_instance" "nextjs" {
+resource "aws_instance" "web" {
   ami                    = var.amis[var.region]
   instance_type          = var.instance_type
-  #key_name               = var.key_name
+  key_name               = var.key_name
   subnet_id              = aws_subnet.subnet1.id
   vpc_security_group_ids = [aws_security_group.webserver.id]
 
@@ -120,27 +112,29 @@ resource "aws_instance" "nextjs" {
   #userdata
   user_data = <<EOF
 #!/bin/bash
+
 apt-get -y update
+
 curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+
 sudo apt-get install -y nodejs
+
 node -v
 
-sudo npm install -g npm@latest
-npm -v
+cd /home/ubuntu
 
-cd /var/www/html
-rm *.html
-git clone https://github.com/warengonzaga/sample-nextjs-app.git .
-cp -a src/* .
-rm -rf {.git,*.md,src,conf.d,docs,Dockerfile,index.nginx-debian.html}
+git clone https://github.com/warengonzaga/sample-nextjs-app.git
 
 cd sample-nextjs-app
-npm install
-npm run build
+
+sudo npm install 
+
+sudo npm run build
 
 sudo npm install pm2 -g
 
-pm2 start npm --name nextjs-app -- run start -- -p 3000
+sudo pm2 start npm --name nextjs-app -- run start -- -p 3000
+
 pm2 start nextjs-app
 
 
@@ -148,6 +142,6 @@ echo fin v1.00!
 EOF
 
   tags = {
-    Name = "Nextjs"
+    Name = "Pecrio"
   }
 }

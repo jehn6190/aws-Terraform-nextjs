@@ -1,3 +1,3 @@
-region             = "us-west-2"
-availability_zones = ["us-west-2a", "us-west-2b"]
-instance_type      = "t3.micro"
+region             = "eu-west-2"
+availability_zones = ["eu-west-2a", "eu-west-2b"]
+instance_type      = "t2.micro"
