@@ -30,7 +30,7 @@ resource "aws_subnet" "subnet1" {
 #     Name = "Subnet1"
 #     Type = "Public"
 #   }
-# }
+}
 
 resource "aws_subnet" "subnet2" {
   vpc_id            = aws_vpc.main.id
