@@ -26,11 +26,11 @@ resource "aws_subnet" "subnet1" {
   cidr_block        = "10.0.1.0/24"
   availability_zone = var.availability_zones[0]
 
-  tags = {
-    Name = "Subnet1"
-    Type = "Public"
-  }
-}
+#   tags = {
+#     Name = "Subnet1"
+#     Type = "Public"
+#   }
+# }
 
 resource "aws_subnet" "subnet2" {
   vpc_id            = aws_vpc.main.id
