@@ -95,10 +95,10 @@ resource "aws_security_group" "webserver" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = {
-    Name = "Allow traffic"
-  }
-}
+#   tags = {
+#     Name = "Allow traffic"
+#   }
+# }
 
 resource "aws_instance" "web" {
   ami                    = var.amis[var.region]
