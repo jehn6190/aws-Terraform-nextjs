@@ -98,7 +98,7 @@ resource "aws_security_group" "webserver" {
 # #   tags = {
 # #     Name = "Allow traffic"
 # #   }
-# }
+}
 
 resource "aws_instance" "web" {
   ami                    = var.amis[var.region]
