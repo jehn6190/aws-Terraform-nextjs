@@ -141,7 +141,7 @@ pm2 start nextjs-app
 echo fin v1.00!
 EOF
 
-#   tags = {
-#     Name = "Pecrio"
-#   }
-# }
+  tags = {
+    Name = "Pecrio"
+  }
+}
